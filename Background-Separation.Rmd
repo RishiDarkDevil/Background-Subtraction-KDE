@@ -161,11 +161,13 @@ par(mfrow = c(1,1))
 ```
 
 - We consider another video footage of traffic on a road at the 20th Frame. The main 3 cars and the density plot without threshold is almost perfect in separating background. The jagged threshold plot is dependent on the threshold and varies with sitation. We can use an adaptive method to set the threshold for better performance.
+
 ```{r traffic_pic_ori, fig.asp=1, fig.width=12, warning=FALSE}
 vid <- load.video("traffic2.mp4")
 plot(grayscale(as.cimg(vid[,,15,])), main = "15th Frame from Traffic Surveillance Camera")
 ```
 ![Traffic Surveillance](traffic.gif)
+
 
 ```{r run_fun_traffic, fig.asp=1, fig.width=12, warning=FALSE}
 sep1 <- background.separat.frame.KDE("traffic_gray.mp4", 15, 0.099)
