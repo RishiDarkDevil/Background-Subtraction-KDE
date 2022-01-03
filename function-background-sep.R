@@ -105,6 +105,6 @@ for (i in seq(1, 47, by= 4)) {
 background.separat.frame.KDE("shortVideo.mp4", 100)
 background.separat.frame.KDE.prob("shortVideo.mp4", 100, 0.1)
 
-background.separat.frame.KDE.prob("traffic2.mp4", 5, 0.2)
+background.separat.frame.KDE.prob("traffic2.mp4", 20, 0.05)
 
 dim(grayscale(vid))
