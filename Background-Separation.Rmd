@@ -63,7 +63,6 @@ background.separat.frame.KDE <- function(filename, frame, th = 0.05){
   }
   
   # Setting the separation color
-  prob.quantile <- quantile(prob.kde)
   sep.img <- vid[,,k,]
   for (i in 1:dim(sep.img)[1]) {
     for (j in 1:dim(sep.img)[2]) {
@@ -80,8 +79,10 @@ background.separat.frame.KDE.prob <- function(filename, frame, th = 0.05){
   require(imager)
   
   # Loading the video
-  vid <<- load.video(filename)
-  #vid <<- vid[,,1:frame,]
+  if(typeof(filename) != "double")
+    vid <- load.video(filename)
+  else
+    vid <- filename
   
   # Separated Image
   prob.kde <<- matrix(0, nrow = dim(vid)[1], ncol = dim(vid)[2])
@@ -106,7 +107,7 @@ background.separat.frame.KDE.prob <- function(filename, frame, th = 0.05){
 
 ```{r human_pic_ori, fig.asp=1, fig.width=12, warning=FALSE, cache=TRUE}
 vid <- load.video("shortVideo.mp4")
-plot(grayscale(as.cimg(vid[,,100,])))
+plot(grayscale(as.cimg(vid[,,100,])), main = "100th Frame from Household Security Camera")
 ```
 
 
@@ -153,30 +154,46 @@ par(mfrow = c(2,2))
 plot(grayscale(as.cimg(vid[,,100,])), main = "Original Frame")
 plot(sep1, main = "Background Separated Frame")
 plot(as.cimg((1-prob.kde)), main = "Density Values of Frame")
-prob.kde[prob.kde >= 0.123] <- 1
-prob.kde[prob.kde < 0.123] <- 0
-plot(as.cimg((1-prob.kde)), main = "Density Values of Frame cutoff at Threshold")
+prob.kde1 <- prob.kde
+prob.kde1[prob.kde1 >= 0.123] <- 1
+prob.kde1[prob.kde1 < 0.123] <- 0
+plot(as.cimg((1-prob.kde1)), main = "Density Values of Frame cutoff at Threshold")
 par(mfrow = c(1,1))
 ```
 
-- We consider another video footage of traffic on a road at the 20th Frame.
+- We consider another video footage of traffic on a road at the 20th Frame. The main 3 cars and the density plot without threshold is almost perfect in separating background. The jagged threshold plot is dependent on the threshold and varies with sitation. We can use an adaptive method to set the threshold for better performance.
 ```{r traffic_pic_ori, fig.asp=1, fig.width=12, warning=FALSE, cache=TRUE}
 vid <- load.video("traffic2.mp4")
-plot(grayscale(as.cimg(vid[,,20,])))
+plot(grayscale(as.cimg(vid[,,15,])), main = "15th Frame from Traffic Surveillance Camera")
 ```
 ![Traffic Surveillance](traffic.gif)
 
 ```{r run_fun_traffic, fig.asp=1, fig.width=12, warning=FALSE, cache=TRUE}
-sep1 <- background.separat.frame.KDE("traffic_gray.mp4", 20, 0.2)
+sep1 <- background.separat.frame.KDE("traffic_gray.mp4", 15, 0.099)
 ```
 
 ```{r background_sep_frame_plot_traffic, fig.asp=1, fig.width=12, warning=FALSE}
 par(mfrow = c(2,2))
-plot(grayscale(as.cimg(vid[,,20,])), main = "Original Frame")
+plot(grayscale(as.cimg(vid[,,15,])), main = "Original Frame")
 plot(sep1, main = "Background Separated Frame")
 plot(as.cimg((1-prob.kde)), main = "Density Values of Frame")
-prob.kde[prob.kde >= 0.2] <- 1
-prob.kde[prob.kde < 0.2] <- 0
-plot(as.cimg((1-prob.kde)), main = "Density Values of Frame cutoff at Threshold")
+prob.kde1 <- prob.kde
+prob.kde1[prob.kde1 >= 0.098] <- 1
+plot(as.cimg((1-prob.kde1)), main = "Density Values of Frame cutoff at Threshold")
 par(mfrow = c(1,1))
 ```
+
+This wraps up the application of our KDE Method for moving object detection.
+
+# CONCLUSION
+
+We can use this method in:
+- Security and Surveillance cameras to detect motion.
+- Motion and Object detection.
+- Enhancing and Focusing on region of action.
+- It is comparatively computationally fast.
+- It is immune to slight changes in background
+
+Drawbacks:
+- It fails to use the spatial correlation.
+- It fails to detect entire object clearly at difficult situations.
