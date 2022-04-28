@@ -1,4 +1,5 @@
 # Background Subtraction KDE
+![](Background-Separation_files/figure-html/background_sep_frame_plot-1.png)
 I have applied KDE(Kernel Density Estimation) to attain Background Subtraction by fitting a KD Estimator for each pixel over time.\
 It is specially useful to detect foreground motion and separate it from background in cases like Video Surveillance and Traffic Monitoring, automatically without Manual Intervention.
 
